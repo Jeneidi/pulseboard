@@ -1,0 +1,185 @@
+{
+  "generated_at_utc": "2026-06-24T13:05:04Z",
+  "dataset": {
+    "source_url": "https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv",
+    "sha256": "714f8a23e9d7429052a1e9b45d20b9adeb64f46c067ed46320e68182e4607b6d",
+    "download_date": "2026-06-24",
+    "license_note": "Gapminder Foundation data, redistributed via plotly/datasets (public, no auth, no PII)."
+  },
+  "meta": {
+    "n_rows": 1704,
+    "n_countries": 142,
+    "continents": [
+      "Africa",
+      "Americas",
+      "Asia",
+      "Europe",
+      "Oceania"
+    ],
+    "years": [
+      1952,
+      1957,
+      1962,
+      1967,
+      1972,
+      1977,
+      1982,
+      1987,
+      1992,
+      1997,
+      2002,
+      2007
+    ],
+    "year_min": 1952,
+    "year_max": 2007,
+    "gdp_min": 241.1658765,
+    "gdp_max": 113523.1329,
+    "life_min": 23.599,
+    "life_max": 82.603
+  },
+  "headline": {
+    "model": "lifeExp ~ const + slope * log10(gdpPercap)",
+    "description": "OLS regression of life expectancy on log10(GDP per capita), full dataset, all years and continents pooled.",
+    "slope": 19.353423332695954,
+    "intercept": -9.100889238095245,
+    "ci95_low": 18.68158496200959,
+    "ci95_high": 20.025261703382316,
+    "se": 0.3425372144224522,
+    "p_value": 0.0,
+    "r_squared": 0.6522466389779382,
+    "n": 1704
+  },
+  "headline_year_controlled": {
+    "model": "lifeExp ~ const + slope_loggdp * log10(gdpPercap) + slope_year * (year - mean(year))",
+    "description": "Robustness check: same regression controlling for year.",
+    "slope_loggdp": 17.891823331861914,
+    "ci95_low_loggdp": 17.268210578534962,
+    "ci95_high_loggdp": 18.515436085188867,
+    "p_value_loggdp": 0.0,
+    "slope_year": 0.1955692740227825,
+    "p_value_year": 5.361861510524603e-78,
+    "r_squared": 0.7168579702804889,
+    "n": 1704
+  },
+  "anova": {
+    "model": "one-way ANOVA: lifeExp ~ continent",
+    "f_stat": 408.7284326738497,
+    "p_value": 8.323262721675936e-247,
+    "groups": [
+      "Africa",
+      "Americas",
+      "Asia",
+      "Europe",
+      "Oceania"
+    ]
+  },
+  "per_continent_lifeExp": {
+    "Africa": {
+      "mean": 48.86533012820513,
+      "ci95_low": 48.14599477028458,
+      "ci95_high": 49.58466548612568,
+      "n": 624,
+      "std": 9.150210228881875
+    },
+    "Americas": {
+      "mean": 64.65873666666667,
+      "ci95_low": 63.59696204317663,
+      "ci95_high": 65.72051129015671,
+      "n": 300,
+      "std": 9.345088002791732
+    },
+    "Asia": {
+      "mean": 60.06490323232324,
+      "ci95_low": 58.892751497004305,
+      "ci95_high": 61.23705496764217,
+      "n": 396,
+      "std": 11.864531527939569
+    },
+    "Europe": {
+      "mean": 71.9036861111111,
+      "ci95_low": 71.34054483084928,
+      "ci95_high": 72.46682739137292,
+      "n": 360,
+      "std": 5.433177808261513
+    },
+    "Oceania": {
+      "mean": 74.32620833333333,
+      "ci95_low": 72.72346234834549,
+      "ci95_high": 75.92895431832116,
+      "n": 24,
+      "std": 3.795611057858303
+    }
+  },
+  "pairwise_ttests": [
+    {
+      "a": "Africa",
+      "b": "Americas",
+      "t_stat": -24.218029805814417,
+      "p_value": 5.0448541044962504e-90,
+      "mean_diff": -15.79340653846154
+    },
+    {
+      "a": "Africa",
+      "b": "Asia",
+      "t_stat": -16.00511815749722,
+      "p_value": 3.054028115140417e-49,
+      "mean_diff": -11.199573104118109
+    },
+    {
+      "a": "Africa",
+      "b": "Europe",
+      "t_stat": -49.550554549512896,
+      "p_value": 2.6227155387337475e-269,
+      "mean_diff": -23.03835598290597
+    },
+    {
+      "a": "Africa",
+      "b": "Oceania",
+      "t_stat": -29.70919870049894,
+      "p_value": 4.2704385132532284e-26,
+      "mean_diff": -25.460878205128196
+    },
+    {
+      "a": "Americas",
+      "b": "Asia",
+      "t_stat": 5.713021799190084,
+      "p_value": 1.648140038984527e-08,
+      "mean_diff": 4.593833434343431
+    },
+    {
+      "a": "Americas",
+      "b": "Europe",
+      "t_stat": -11.861029096668483,
+      "p_value": 1.6711172054272223e-28,
+      "mean_diff": -7.24494944444443
+    },
+    {
+      "a": "Americas",
+      "b": "Oceania",
+      "t_stat": -10.239564753710747,
+      "p_value": 7.522629852554566e-14,
+      "mean_diff": -9.667471666666657
+    },
+    {
+      "a": "Asia",
+      "b": "Europe",
+      "t_stat": -17.8991528608153,
+      "p_value": 4.281527398937046e-57,
+      "mean_diff": -11.83878287878786
+    },
+    {
+      "a": "Asia",
+      "b": "Oceania",
+      "t_stat": -14.587708870477915,
+      "p_value": 6.394897018453558e-21,
+      "mean_diff": -14.261305101010088
+    },
+    {
+      "a": "Europe",
+      "b": "Oceania",
+      "t_stat": -2.932835556634377,
+      "p_value": 0.006415143964556863,
+      "mean_diff": -2.422522222222227
+    }
+  ]
+}
