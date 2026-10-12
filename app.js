@@ -18,14 +18,22 @@
  * and set via textContent / attribute setters.
  */
 
-const CONTINENT_COLORS = {
-  Africa: "#ff7a59",
-  Americas: "#00e0c7",
-  Asia: "#c6f135",
-  Europe: "#7aa2ff",
-  Oceania: "#e879f9",
+const CONTINENT_COLOR_VARS = {
+  Africa: "--chart-africa",
+  Americas: "--chart-americas",
+  Asia: "--chart-asia",
+  Europe: "--chart-europe",
+  Oceania: "--chart-oceania",
 };
 const CONTINENT_ORDER = ["Africa", "Americas", "Asia", "Europe", "Oceania"];
+
+function cssColor(name, fallback = "currentColor") {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+}
+
+function continentColor(continent) {
+  return cssColor(CONTINENT_COLOR_VARS[continent]);
+}
 
 let RAW_DATA = [];
 let FINDINGS = null;
@@ -337,8 +345,9 @@ function renderFilterChips() {
     chip.textContent = continent;
     chip.setAttribute("aria-pressed", state.continents.has(continent) ? "true" : "false");
     if (state.continents.has(continent)) {
-      chip.style.background = CONTINENT_COLORS[continent];
-      chip.style.borderColor = CONTINENT_COLORS[continent];
+      const color = continentColor(continent);
+      chip.style.background = color;
+      chip.style.borderColor = color;
     }
     chip.addEventListener("click", () => {
       if (state.continents.has(continent)) {
@@ -452,7 +461,7 @@ function renderScatter(rows, fit) {
       cx: xScale(d.gdpPercap),
       cy: yScale(d.lifeExp),
       r: 3.2,
-      fill: CONTINENT_COLORS[d.continent] || "#888",
+      fill: continentColor(d.continent),
       "fill-opacity": 0.55,
       stroke: "none",
     });
@@ -482,7 +491,7 @@ function renderScatter(rows, fit) {
     item.className = "legend-item";
     const dot = document.createElement("span");
     dot.className = "legend-dot";
-    dot.style.background = CONTINENT_COLORS[continent];
+    dot.style.background = continentColor(continent);
     item.appendChild(dot);
     const label = document.createElement("span");
     label.textContent = continent;
@@ -495,7 +504,7 @@ function renderScatter(rows, fit) {
   lineSwatch.style.display = "inline-block";
   lineSwatch.style.width = "14px";
   lineSwatch.style.height = "2.5px";
-  lineSwatch.style.background = "#c6f135";
+  lineSwatch.style.background = cssColor("--chart-line");
   lineItem.appendChild(lineSwatch);
   const lineLabel = document.createElement("span");
   lineLabel.textContent = "OLS fit (current selection)";
@@ -549,7 +558,7 @@ function renderBarChart(rows) {
     const cx = margin.left + bandWidth * i + bandWidth / 2;
     const barH = plotH - (yScale(s.mean) - margin.top);
     const barY = yScale(s.mean);
-    const color = CONTINENT_COLORS[s.continent];
+    const color = continentColor(s.continent);
 
     svg.appendChild(
       svgEl("rect", {
@@ -566,9 +575,10 @@ function renderBarChart(rows) {
     // error bar
     const yHi = yScale(s.ci95High);
     const yLo = yScale(s.ci95Low);
-    svg.appendChild(svgEl("line", { x1: cx, x2: cx, y1: yHi, y2: yLo, stroke: "#e7edf3", "stroke-width": 1.6 }));
-    svg.appendChild(svgEl("line", { x1: cx - 8, x2: cx + 8, y1: yHi, y2: yHi, stroke: "#e7edf3", "stroke-width": 1.6 }));
-    svg.appendChild(svgEl("line", { x1: cx - 8, x2: cx + 8, y1: yLo, y2: yLo, stroke: "#e7edf3", "stroke-width": 1.6 }));
+    const chartInk = cssColor("--chart-ink");
+    svg.appendChild(svgEl("line", { x1: cx, x2: cx, y1: yHi, y2: yLo, stroke: chartInk, "stroke-width": 1.6 }));
+    svg.appendChild(svgEl("line", { x1: cx - 8, x2: cx + 8, y1: yHi, y2: yHi, stroke: chartInk, "stroke-width": 1.6 }));
+    svg.appendChild(svgEl("line", { x1: cx - 8, x2: cx + 8, y1: yLo, y2: yLo, stroke: chartInk, "stroke-width": 1.6 }));
 
     svg.appendChild(textEl({ x: cx, y: height - margin.bottom + 20, "text-anchor": "middle" }, s.continent, "axis-label"));
     svg.appendChild(textEl({ x: cx, y: barY - 10, "text-anchor": "middle" }, s.mean.toFixed(1), "axis-label"));

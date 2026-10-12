@@ -1,217 +1,196 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-palette="daylight-indigo">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PulseBoard — Income &amp; Life Expectancy, Statistically</title>
-<meta name="description" content="A reproducible statistics dashboard: does national income predict life expectancy? Real OLS regression, p-values, and 95% confidence intervals on the public Gapminder dataset.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%230b0f14%22/><path d=%22M4 20 L11 20 L14 10 L18 24 L21 14 L24 18 L28 18%22 stroke=%22%2300e0c7%22 stroke-width=%222.4%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/></svg>">
-<link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PulseBoard - Income &amp; Life Expectancy, Statistically</title>
+  <meta name="description" content="A reproducible statistics dashboard: does national income predict life expectancy? Real OLS regression, p-values, and 95% confidence intervals on the public Gapminder dataset.">
+  <meta name="theme-color" content="#f2f4f9">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23f2f4f9'/%3E%3Cg fill='%233f4cc8'%3E%3Crect x='4' y='9' width='2.4' height='6' rx='1.2'/%3E%3Crect x='8.2' y='6' width='2.4' height='12' rx='1.2'/%3E%3Crect x='12.4' y='4' width='2.4' height='16' rx='1.2'/%3E%3Crect x='16.6' y='7' width='2.4' height='10' rx='1.2'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="stylesheet" href="kit.css">
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
+  <a class="skip" href="#main">Skip to content</a>
 
-<a class="skip-link" href="#main">Skip to content</a>
-
-<header class="site-header">
-  <div class="wrap header-inner">
-    <div class="brand">
-      <svg class="brand-mark" width="28" height="28" viewBox="0 0 32 32" aria-hidden="true">
-        <rect width="32" height="32" rx="7" fill="#0b0f14"/>
-        <path d="M4 20 L11 20 L14 10 L18 24 L21 14 L24 18 L28 18" stroke="#00e0c7" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span class="brand-name">PulseBoard</span>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="#top" aria-label="PulseBoard home">
+        <svg class="glyph" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><rect x="1.7" y="9" width="2.6" height="6" rx="1.3" fill="currentColor"/><rect x="6.2" y="5" width="2.6" height="14" rx="1.3" fill="currentColor"/><rect x="10.7" y="2" width="2.6" height="20" rx="1.3" fill="currentColor"/><rect x="15.2" y="6" width="2.6" height="12" rx="1.3" fill="currentColor"/><rect x="19.7" y="10" width="2.6" height="4" rx="1.3" fill="currentColor"/></svg>
+        <span>PulseBoard</span>
+      </a>
+      <nav class="desk-nav" aria-label="Sections">
+        <ul class="nav-links">
+          <li><a href="#explore">Explore</a></li>
+          <li><a href="#continents">Continents</a></li>
+          <li><a href="#methodology">Methodology</a></li>
+          <li><a href="#limitations">Limitations</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a class="text-link" href="https://github.com/Jeneidi/pulseboard" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+          <span>GitHub</span>
+        </a>
+        <a class="btn btn-primary header-cta" href="#explore">Explore the data</a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu"><span></span><span></span><span></span></button>
+      </div>
     </div>
-    <nav class="header-nav" aria-label="Section navigation">
-      <a href="#explore">Explore</a>
-      <a href="#continents">Continents</a>
-      <a href="#methodology">Methodology</a>
-      <a href="#limitations">Limitations</a>
-    </nav>
-  </div>
-</header>
+    <div class="mobile-nav" id="mobile-menu">
+      <div class="mobile-nav-inner">
+        <ul class="mobile-nav-links">
+          <li><a href="#explore">Explore</a></li>
+          <li><a href="#continents">Continents</a></li>
+          <li><a href="#methodology">Methodology</a></li>
+          <li><a href="#limitations">Limitations</a></li>
+          <li><a href="https://github.com/Jeneidi/pulseboard" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+        <a class="btn btn-primary mobile-nav-cta" href="#explore">Explore the data</a>
+      </div>
+    </div>
+  </header>
 
-<main id="main">
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="wrap">
-      <p class="eyebrow">Statistical dashboard &middot; real data &middot; real inference</p>
-      <h1>Does national income predict how long people live?</h1>
-      <p class="hero-sub">
-        An OLS regression of life expectancy on log&#8290;<sub>10</sub>(GDP per capita) across
-        <strong id="hero-n">&hellip;</strong> country-year observations from the public
-        <strong>Gapminder</strong> dataset (1952&ndash;2007).
-      </p>
-
-      <div class="hero-stats" id="hero-stats" aria-live="polite">
-        <div class="stat-card">
-          <span class="stat-label">Slope (years of life / 10&times; income)</span>
-          <span class="stat-value" id="stat-slope">&hellip;</span>
-          <span class="stat-sub" id="stat-slope-ci">95% CI &hellip;</span>
+  <main id="main" tabindex="-1">
+    <section class="hero wrap" id="top" aria-labelledby="hero-title">
+      <p class="eyebrow">Statistical dashboard · real data · real inference</p>
+      <h1 id="hero-title" class="display">
+        <span class="line"><span>Does national income</span></span>
+        <span class="line"><span>predict how long people live?</span></span>
+      </h1>
+      <p class="lead hero-sub">An OLS regression of life expectancy on log<sub>10</sub>(GDP per capita) across <strong id="hero-n">...</strong> country-year observations from the public <strong>Gapminder</strong> dataset (1952-2007).</p>
+      <div class="stats hero-stats" id="hero-stats" aria-live="polite">
+        <div class="stat card stat-card">
+          <span class="stat-label">Slope, years of life per 10x income</span>
+          <b class="stat-value" id="stat-slope">...</b>
+          <span class="stat-sub" id="stat-slope-ci">95% CI ...</span>
         </div>
-        <div class="stat-card">
+        <div class="stat card stat-card">
           <span class="stat-label">p-value</span>
-          <span class="stat-value" id="stat-p">&hellip;</span>
-          <span class="stat-sub">two-sided t-test, H&#8320;: slope = 0</span>
+          <b class="stat-value" id="stat-p">...</b>
+          <span class="stat-sub">Two-sided t-test, H0: slope = 0</span>
         </div>
-        <div class="stat-card">
-          <span class="stat-label">R&sup2;</span>
-          <span class="stat-value" id="stat-r2">&hellip;</span>
-          <span class="stat-sub">variance explained</span>
+        <div class="stat card stat-card">
+          <span class="stat-label">R2</span>
+          <b class="stat-value" id="stat-r2">...</b>
+          <span class="stat-sub">Variance explained</span>
         </div>
-        <div class="stat-card">
+        <div class="stat card stat-card">
           <span class="stat-label">n</span>
-          <span class="stat-value" id="stat-n">&hellip;</span>
-          <span class="stat-sub">observations in current selection</span>
+          <b class="stat-value" id="stat-n">...</b>
+          <span class="stat-sub">Observations in current selection</span>
         </div>
       </div>
-      <p class="hero-note">
-        Every number above is computed live from <code>data/findings.json</code> /
-        client-side OLS &mdash; nothing on this page is hand-typed.
-      </p>
-    </div>
-  </section>
-
-  <!-- FILTERS -->
-  <section class="filters-bar" id="explore">
-    <div class="wrap filters-inner">
-      <div class="filter-group" role="group" aria-labelledby="continent-filter-label">
-        <span class="filter-label" id="continent-filter-label">Continent</span>
-        <div class="chip-row" id="continent-chips"></div>
+      <p class="hero-note">Every number above is computed live from <code>data/findings.json</code> and client-side OLS. Nothing on this page is hand-typed.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#explore">Explore the data</a>
+        <a class="btn btn-ghost" href="#methodology">See the method</a>
       </div>
+    </section>
 
-      <div class="filter-group year-group">
-        <label class="filter-label" for="year-range">Year range</label>
-        <div class="year-controls">
-          <input type="range" id="year-min" min="1952" max="2007" step="5" value="1952" aria-label="Start year">
-          <input type="range" id="year-max" min="1952" max="2007" step="5" value="2007" aria-label="End year">
+    <section class="section wrap" id="explore" aria-labelledby="explore-title">
+      <div class="split explore-intro">
+        <div>
+          <p class="eyebrow">01 / Explore</p>
+          <h2 id="explore-title" class="h2">Filter the relationship, not the evidence.</h2>
+          <p class="prose">Choose continents and a year range. The browser refits the regression, redraws both charts, and updates every readout for the exact rows in your selection.</p>
         </div>
-        <div class="year-readout" id="year-readout">1952 &ndash; 2007</div>
-      </div>
-
-      <button class="reset-btn" id="reset-filters" type="button">Reset filters</button>
-    </div>
-  </section>
-
-  <!-- MAIN CHART -->
-  <section class="panel">
-    <div class="wrap">
-      <div class="panel-head">
-        <h2>Income vs. life expectancy</h2>
-        <p class="panel-sub">Each point is one country in one year. X-axis is log-scaled GDP per capita. Line is the OLS fit for the current selection.</p>
-      </div>
-      <div class="chart-card">
-        <div class="chart-legend" id="scatter-legend" aria-hidden="false"></div>
-        <svg id="scatter-chart" viewBox="0 0 920 520" role="img" aria-labelledby="scatter-title scatter-desc" preserveAspectRatio="xMidYMid meet">
-          <title id="scatter-title">Scatter plot of GDP per capita versus life expectancy</title>
-          <desc id="scatter-desc">Log-scaled GDP per capita on the x-axis, life expectancy in years on the y-axis, points colored by continent, with an overlaid OLS regression line.</desc>
-        </svg>
-        <div class="readout-row">
-          <span>Filtered fit: slope <strong id="live-slope">&hellip;</strong> years per 10&times; income, 95% CI <span id="live-ci">&hellip;</span>, p <span id="live-p">&hellip;</span>, R&sup2; <span id="live-r2">&hellip;</span>, n <span id="live-n">&hellip;</span></span>
+        <div class="card filter-card">
+          <div class="filter-group" role="group" aria-labelledby="continent-filter-label">
+            <span class="label" id="continent-filter-label">Continent</span>
+            <div class="chip-row" id="continent-chips"></div>
+          </div>
+          <div class="filter-group year-group">
+            <label class="label" for="year-min">Year range</label>
+            <div class="year-controls">
+              <input class="control range-control" type="range" id="year-min" min="1952" max="2007" step="5" value="1952" aria-label="Start year">
+              <input class="control range-control" type="range" id="year-max" min="1952" max="2007" step="5" value="2007" aria-label="End year">
+            </div>
+            <div class="year-readout" id="year-readout">1952 - 2007</div>
+          </div>
+          <button class="btn btn-ghost reset-btn" id="reset-filters" type="button">Reset filters</button>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- CONTINENT CHART -->
-  <section class="panel alt" id="continents">
-    <div class="wrap">
-      <div class="panel-head">
-        <h2>Mean life expectancy by continent</h2>
-        <p class="panel-sub">Bars show the mean for the current selection; error bars are 95% confidence intervals (t-distribution).</p>
-      </div>
-      <div class="chart-card">
-        <svg id="bar-chart" viewBox="0 0 920 420" role="img" aria-labelledby="bar-title bar-desc" preserveAspectRatio="xMidYMid meet">
-          <title id="bar-title">Bar chart of mean life expectancy by continent</title>
-          <desc id="bar-desc">Five bars, one per continent, showing mean life expectancy with 95 percent confidence interval error bars for the current filter selection.</desc>
-        </svg>
-        <div class="readout-row" id="anova-readout">
-          One-way ANOVA across continents (current selection): F <span id="anova-f">&hellip;</span>, p <span id="anova-p">&hellip;</span>
+      <div class="chart-block">
+        <div class="section-heading">
+          <h3 class="h3">Income vs. life expectancy</h3>
+          <p class="lead">Each point is one country in one year. The x-axis is log-scaled GDP per capita, and the line is the OLS fit for the current selection.</p>
+        </div>
+        <div class="card chart-card">
+          <div class="chart-legend" id="scatter-legend" aria-hidden="false"></div>
+          <svg id="scatter-chart" viewBox="0 0 920 520" role="img" aria-labelledby="scatter-title scatter-desc" preserveAspectRatio="xMidYMid meet">
+            <title id="scatter-title">Scatter plot of GDP per capita versus life expectancy</title>
+            <desc id="scatter-desc">Log-scaled GDP per capita on the x-axis, life expectancy in years on the y-axis, points colored by continent, with an overlaid OLS regression line.</desc>
+          </svg>
+          <div class="readout-row"><span>Filtered fit: slope <strong id="live-slope">...</strong> years per 10x income, 95% CI <span id="live-ci">...</span>, p <span id="live-p">...</span>, R2 <span id="live-r2">...</span>, n <span id="live-n">...</span></span></div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- METHODOLOGY -->
-  <section class="panel" id="methodology">
-    <div class="wrap">
-      <div class="panel-head">
-        <h2>Methodology</h2>
+    <section class="section band" id="continents" aria-labelledby="continents-title">
+      <div class="wrap">
+        <p class="eyebrow">02 / Continents</p>
+        <h2 id="continents-title" class="h2">The same selection, viewed by place.</h2>
+        <p class="lead">Bars show mean life expectancy for the current selection. Error bars are 95% confidence intervals from the t-distribution.</p>
+        <div class="card chart-card">
+          <svg id="bar-chart" viewBox="0 0 920 420" role="img" aria-labelledby="bar-title bar-desc" preserveAspectRatio="xMidYMid meet">
+            <title id="bar-title">Bar chart of mean life expectancy by continent</title>
+            <desc id="bar-desc">Bars show mean life expectancy by continent with 95 percent confidence interval error bars for the current filter selection.</desc>
+          </svg>
+          <div class="readout-row" id="anova-readout">One-way ANOVA across continents, current selection: F <span id="anova-f">...</span>, p <span id="anova-p">...</span></div>
+        </div>
       </div>
-      <div class="text-grid">
-        <article>
-          <h3>Model</h3>
-          <p>
-            Headline model: <code>lifeExp = &beta;&#8320; + &beta;&#8321; &middot; log&#8290;<sub>10</sub>(gdpPercap) + &epsilon;</code>,
-            fit by ordinary least squares. log&#8290;<sub>10</sub> is used because income is heavily
-            right-skewed and its effect on lifespan is plausibly multiplicative, not additive &mdash;
-            common practice in the development-economics literature.
-          </p>
-          <p>
-            A robustness check controlling for survey year (<code>+ &beta;&#8322;&middot;year_centered</code>)
-            is also computed server-side; see <code>data/findings.json &rarr; headline_year_controlled</code>.
-            The slope on log GDP stays large and significant after adding year, so the relationship is not
-            purely an artifact of the whole world getting richer and living longer over time together.
-          </p>
-        </article>
-        <article>
-          <h3>What the CI and p-value mean</h3>
-          <p>
-            The <strong>95% confidence interval</strong> for the slope is the range of values that would
-            contain the true slope in 95% of repeated samples drawn the same way, under the model's
-            assumptions. The <strong>p-value</strong> is the probability of observing a slope this far
-            from zero, by chance, if the true slope were exactly zero (the null hypothesis). Small p-values
-            here reflect the very large sample size (n &asymp; 1700) as well as a genuinely strong association.
-          </p>
-        </article>
-        <article>
-          <h3>Client-side recomputation</h3>
-          <p>
-            When you change the continent or year filters, the regression is <strong>not</strong> looked up
-            from a table &mdash; it is refit in your browser using the closed-form OLS normal equations
-            (<code>&beta; = (X&#7488;X)&#8315;&sup1;X&#7488;y</code>) with a t-distribution-based 95% CI and
-            two-sided p-value, implemented in <code>app.js</code>. This is the same statistical method the
-            Python analysis uses, just re-derived in JavaScript so the inference for any subset is honest
-            rather than interpolated.
-          </p>
-        </article>
-        <article>
-          <h3>Dataset</h3>
-          <p id="methodology-dataset">Loading dataset provenance&hellip;</p>
-        </article>
+    </section>
+
+    <section class="section wrap" id="methodology" aria-labelledby="methodology-title">
+      <div class="split">
+        <div>
+          <p class="eyebrow">03 / Methodology</p>
+          <h2 id="methodology-title" class="h2">A transparent model with a live check.</h2>
+          <p class="prose">The headline is an ordinary least squares regression, and every filter is recomputed in the browser from the underlying country-year rows.</p>
+          <div class="code" aria-label="Regression formula">lifeExp = beta0 + beta1 * log10(gdpPercap) + error</div>
+        </div>
+        <ol class="steps">
+          <li><div><b>Model</b><p><code>lifeExp = beta0 + beta1 * log10(gdpPercap) + error</code>, fit by ordinary least squares because income is heavily right-skewed.</p></div></li>
+          <li><div><b>Inference</b><p>The slope gets a t-distribution based 95% confidence interval and a two-sided p-value.</p></div></li>
+          <li><div><b>Client-side recomputation</b><p>Changing a filter refits the model from scratch with the closed-form normal equations. No filtered answer is looked up.</p></div></li>
+          <li><div><b>Dataset provenance</b><p id="methodology-dataset">Loading dataset provenance...</p></div></li>
+        </ol>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- LIMITATIONS -->
-  <section class="panel alt" id="limitations">
-    <div class="wrap">
-      <div class="panel-head">
-        <h2>Limitations</h2>
+    <section class="section band" id="limitations" aria-labelledby="limitations-title">
+      <div class="wrap">
+        <p class="eyebrow">04 / Limitations</p>
+        <h2 id="limitations-title" class="h2">What the data cannot tell us.</h2>
+        <div class="card limitations-card">
+          <ul class="limitations-list">
+            <li><strong>Observational, not experimental.</strong> No country was randomly assigned an income level, so reverse causation and confounding remain possible.</li>
+            <li><strong>Country-level aggregation.</strong> GDP per capita and life expectancy are national averages, not measures of within-country inequality.</li>
+            <li><strong>Five-year sampling.</strong> The data are recorded at five-year intervals from 1952 to 2007, so short-term shocks are invisible.</li>
+            <li><strong>Historical window.</strong> The series predates recent shifts in global health and income and should not be extrapolated to the present.</li>
+            <li><strong>Coarse continent grouping.</strong> Each continent blends very different national trajectories.</li>
+            <li><strong>Small-sample subsets.</strong> A narrow selection can leave few observations. The live n and confidence interval show that instability.</li>
+          </ul>
+        </div>
       </div>
-      <ul class="limitations-list">
-        <li><strong>Observational, not experimental.</strong> No country was randomly assigned an income level. The association is consistent with income causing longer life (via nutrition, healthcare, sanitation) but also with reverse causation or confounding (e.g., institutions, education, conflict) driving both.</li>
-        <li><strong>Country-level aggregation.</strong> GDP per capita and life expectancy are national averages; they say nothing about within-country inequality.</li>
-        <li><strong>Five-year sampling.</strong> Data are recorded at five-year intervals (1952&ndash;2007), so short-term shocks (wars, epidemics, financial crises) between sample years are invisible.</li>
-        <li><strong>Historical window.</strong> The series ends in 2007 and predates recent shifts in global health and income; it should not be extrapolated to the present.</li>
-        <li><strong>Continent is a coarse grouping.</strong> It blends very different national trajectories within Africa, Asia, and the Americas in particular.</li>
-        <li><strong>Small-sample subsets.</strong> Filtering to a single continent and a narrow year range can leave very few observations (see the live n) &mdash; the displayed CI widens accordingly, but extreme filtering can still produce unstable estimates.</li>
-      </ul>
-    </div>
-  </section>
+    </section>
+  </main>
 
-</main>
-
-<footer class="site-footer">
-  <div class="wrap footer-inner">
-    <p>
-      PulseBoard &middot; data: <a href="https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv" rel="noopener">Gapminder via plotly/datasets</a>
-      &middot; $0 to run, no API key, no LLM, static front-end only.
+  <footer class="wrap site-footer">
+    <p class="footer-brand">
+      <svg class="glyph" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><rect x="1.7" y="9" width="2.6" height="6" rx="1.3" fill="currentColor"/><rect x="6.2" y="5" width="2.6" height="14" rx="1.3" fill="currentColor"/><rect x="10.7" y="2" width="2.6" height="20" rx="1.3" fill="currentColor"/><rect x="15.2" y="6" width="2.6" height="12" rx="1.3" fill="currentColor"/><rect x="19.7" y="10" width="2.6" height="4" rx="1.3" fill="currentColor"/></svg>
+      PulseBoard
     </p>
-    <p><a href="https://github.com/Jeneidi/pulseboard" rel="noopener">Source on GitHub</a></p>
-  </div>
-</footer>
+    <ul>
+      <li><a href="https://github.com/Jeneidi/pulseboard" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://mjeneidi.com" target="_blank" rel="noopener">mjeneidi.com</a></li>
+    </ul>
+    <p>© 2026 Mohammad Jeneidi</p>
+  </footer>
 
-<script src="app.js"></script>
+  <script src="kit.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
