@@ -2,6 +2,8 @@
 
 **Live demo: https://jeneidi.github.io/pulseboard/**
 
+![Screenshot of the live demo](docs/screenshot.png)
+
 A reproducible statistics dashboard that asks one question of real public data:
 
 > **Does national income predict how long people live?**
